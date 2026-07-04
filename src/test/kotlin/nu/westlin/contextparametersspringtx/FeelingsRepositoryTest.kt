@@ -1,7 +1,6 @@
 package nu.westlin.contextparametersspringtx
 
 import org.assertj.core.api.Assertions.assertThat
-import org.jetbrains.exposed.v1.core.Transaction
 import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,12 +16,12 @@ class FeelingsRepositoryTest @Autowired constructor(
 ) {
 
     @Test
-    fun `get - ingen finns`() = exposedTestBlock {
+    fun `get - ingen finns`() = exposedWriteTestBlock {
         assertThat(repository.getFeelingById(42)).isNull()
     }
 
     @Test
-    fun `get - en finns`() = exposedTestBlock {
+    fun `get - en finns`() = exposedWriteTestBlock {
         val feeling = Feeling.new(status = Feeling.Status.Crazy)
         val createdFeeling = repository.create(feeling)
         assertThat(createdFeeling).isEqualTo(feeling.copy(id = createdFeeling.id))
@@ -31,9 +30,20 @@ class FeelingsRepositoryTest @Autowired constructor(
     }
 }
 
-// Hjälpfunktion för att exekvera testkod inuti den aktiva Exposed-transaktionen
-fun <T> exposedTestBlock(block: context(Transaction) () -> T) {
-    return with(TransactionManager.current()) {
-        block()
+// 1. För att testa metoder som bara kräver ReadTx
+@Suppress("REDUNDANT_WITH", "unused", "RedundantWith")
+fun <T> exposedReadTestBlock(block: context(TransactionRunner.ReadTx) () -> T) {
+    val ctx = object : TransactionRunner.ReadTx {
+        override val exposedTx = TransactionManager.current()
     }
+    return with(ctx) { block() }
+}
+
+// 2. För att testa metoder som kräver WriteTx
+@Suppress("REDUNDANT_WITH", "RedundantWith")
+fun <T> exposedWriteTestBlock(block: context(TransactionRunner.WriteTx) () -> T) {
+    val ctx = object : TransactionRunner.WriteTx {
+        override val exposedTx = TransactionManager.current()
+    }
+    return with(ctx) { block() }
 }

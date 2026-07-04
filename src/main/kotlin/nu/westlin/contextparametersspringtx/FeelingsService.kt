@@ -5,16 +5,16 @@ import org.springframework.stereotype.Service
 @Service
 class FeelingsService(
     private val repository: FeelingsRepository,
-    private val txRunner: ExposedTransactionRunner
+    private val txRunner: TransactionRunner
 ) {
 
     fun getById(id: Int): Feeling? {
-        return txRunner.runInTransaction {
+        return txRunner.write {
             repository.getFeelingById(id)
         }
     }
 
     fun create(feeling: Feeling): Feeling {
-        return txRunner.runInTransaction { repository.create(feeling) }
+        return txRunner.write { repository.create(feeling) }
     }
 }

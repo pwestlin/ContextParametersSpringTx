@@ -1,16 +1,14 @@
 package nu.westlin.contextparametersspringtx
 
-import org.jetbrains.exposed.v1.core.Transaction
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.insertAndGetId
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class FeelingsRepository {
 
-    context(_: Transaction)
+    context(_: TransactionRunner.WriteTx)
     fun create(feeling: Feeling): Feeling {
         val generatedId = Feelings.insertAndGetId { row ->
             // id hoppas över här eftersom databasen genererar det automatiskt
@@ -24,7 +22,7 @@ class FeelingsRepository {
     }
 
     // TODO pevest: readOnlye
-    context(_: Transaction)
+    context(_: TransactionRunner.ReadTx)
     fun getFeelingById(feelingId: Int): Feeling? {
         return Feelings
             .selectAll()

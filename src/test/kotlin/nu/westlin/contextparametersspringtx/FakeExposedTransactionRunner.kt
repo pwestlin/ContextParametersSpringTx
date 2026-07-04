@@ -2,12 +2,20 @@ package nu.westlin.contextparametersspringtx
 
 import org.jetbrains.exposed.v1.core.Transaction
 
-class FakeExposedTransactionRunner(private val dummyTransaction: Transaction) : TransactionRunner {
+@Suppress("RedundantWith")
+class FakeExposedTransactionRunner(
+    override val exposedTx: Transaction
+) : TransactionRunner, TransactionRunner.WriteTx {
 
-    override fun <T> runInTransaction(block: context(Transaction) () -> T): T {
-        // Vi etablerar den fejkade Exposed-transaktionen i scopet
-        return with(dummyTransaction) {
-            block()
+    @Suppress("REDUNDANT_WITH")
+        override fun <T> readOnly(block: context(TransactionRunner.ReadTx) () -> T): T {
+            // Vi skickar in 'this' (faken själv) som kontext
+            return with(this) { block() }
         }
-    }
+
+        @Suppress("REDUNDANT_WITH")
+        override fun <T> write(block: context(TransactionRunner.WriteTx) () -> T): T {
+            // Vi skickar in 'this' (faken själv) som kontext
+            return with(this) { block() }
+        }
 }
