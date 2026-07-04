@@ -23,8 +23,8 @@ class FeelingsRepository {
         return feeling.copy(id = generatedId.value)
     }
 
+    // TODO pevest: readOnlye
     context(_: Transaction)
-    @Transactional(readOnly = true)
     fun getFeelingById(feelingId: Int): Feeling? {
         return Feelings
             .selectAll()

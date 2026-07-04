@@ -2,7 +2,6 @@ package nu.westlin.contextparametersspringtx
 
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,15 +14,12 @@ import java.net.URI
 @RestController
 @RequestMapping("/feelings")
 class FeelingsController(
-    private val repository: FeelingsRepository,
-    private val txRunner: ExposedTransactionRunner
+    private val service: FeelingsService
 ) {
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getById(@PathVariable id: Int): ResponseEntity<Feeling> {
-        val feeling = txRunner.runInTransaction {
-            repository.getFeelingById(id)
-        }
+        val feeling = service.getById(id)
         return if (feeling != null) {
             ResponseEntity.ok(feeling)
         } else {
@@ -31,10 +27,9 @@ class FeelingsController(
         }
     }
 
-    @Transactional
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun create(@RequestBody feeling: Feeling): ResponseEntity<Void> {
-        val createdFeeling = txRunner.runInTransaction { repository.create(feeling) }
+        val createdFeeling = service.create(feeling)
 
         val location: URI = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -43,6 +38,5 @@ class FeelingsController(
             .toUri()
 
         return ResponseEntity.created(location).build()
-
     }
 }
