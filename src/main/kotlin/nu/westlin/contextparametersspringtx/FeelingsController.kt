@@ -15,12 +15,15 @@ import java.net.URI
 @RestController
 @RequestMapping("/feelings")
 class FeelingsController(
-    private val repository: FeelingsRepository
+    private val repository: FeelingsRepository,
+    private val txRunner: ExposedTransactionRunner
 ) {
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getById(@PathVariable id: Int): ResponseEntity<Feeling> {
-        val feeling = repository.getFeelingById(id)
+        val feeling = txRunner.runInTransaction {
+            repository.getFeelingById(id)
+        }
         return if (feeling != null) {
             ResponseEntity.ok(feeling)
         } else {
@@ -31,7 +34,7 @@ class FeelingsController(
     @Transactional
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun create(@RequestBody feeling: Feeling): ResponseEntity<Void> {
-        val createdFeeling = repository.create(feeling)
+        val createdFeeling = txRunner.runInTransaction { repository.create(feeling) }
 
         val location: URI = ServletUriComponentsBuilder
             .fromCurrentRequest()
