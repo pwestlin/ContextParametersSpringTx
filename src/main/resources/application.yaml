@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: ContextParametersSpringTx
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 20
+      max-lifetime: 180000
+      idle-timeout: 170000
+
+  docker:
+    compose:
+      lifecycle-management: start_only
+
+  exposed:
+    generate-ddl: true
+    #show-sql: true
+
+logging.level:
+  nu.westlin.contextparametersspringtx: info
+  root: warn

@@ -1,0 +1,15 @@
+### Skapa en feeling
+POST http://localhost:8080/feelings
+Content-Type: application/json
+
+{
+  "status": "Happy"
+}
+
+### Hämta feeling by id som finns
+GET http://localhost:8080/feelings/5
+Accept: application/json
+
+### Hämta feeling by id som inte finns
+GET http://localhost:8080/feelings/42
+Accept: application/json
