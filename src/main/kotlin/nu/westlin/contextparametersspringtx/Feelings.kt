@@ -1,5 +1,6 @@
 package nu.westlin.contextparametersspringtx
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -44,6 +45,8 @@ value class FeelingId private constructor(val value: Int) : Comparable<FeelingId
     companion object {
         val Zero = FeelingId(0)
 
+        @JsonCreator
+        @JvmStatic
         operator fun invoke(id: Int): FeelingId {
             require(id > 0) { "id måste vara > 0 men var $id" }
             return FeelingId(id)

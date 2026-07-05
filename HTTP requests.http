@@ -6,8 +6,25 @@ Content-Type: application/json
   "status": "Happy"
 }
 
+### Skapa en feeling med en felaktig status
+POST http://localhost:8080/feelings
+Content-Type: application/json
+
+{
+  "status": "Koma"
+}
+
+### Skapa en feeling med ett felaktigt id
+POST http://localhost:8080/feelings
+Content-Type: application/json
+
+{
+  "id": -1,
+  "status": "Happy"
+}
+
 ### Hämta feeling by id som finns
-GET http://localhost:8080/feelings/5
+GET http://localhost:8080/feelings/-1
 Accept: application/json
 
 ### Hämta feeling by id som inte finns
