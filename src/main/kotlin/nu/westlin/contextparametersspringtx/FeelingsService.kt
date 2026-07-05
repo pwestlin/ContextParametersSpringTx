@@ -9,7 +9,7 @@ class FeelingsService(
 ) {
 
     @TxRead
-    fun getById(id: Int): Feeling? = txRunner.readOnly {
+    fun getById(id: FeelingId): Feeling? = txRunner.readOnly {
         repository.getFeelingById(id)
     }
 
@@ -17,11 +17,10 @@ class FeelingsService(
     fun create(feeling: Feeling): Feeling = txRunner.write { repository.create(feeling) }
 
     @TxWrite
-    fun delete(feelingId: Int): Boolean = txRunner.write { repository.delete(feelingId) }
+    fun delete(feelingId: FeelingId): Boolean = txRunner.write { repository.delete(feelingId) }
 
-    // TODO pwestlin: "replace foo with bar" vad det nu heter i Kotlin :)
     @TxWrite
-    fun replace(feelingId: Int, replacer: Feeling): Feeling = txRunner.write {
+    fun replace(feelingId: FeelingId, replacer: Feeling): Feeling = txRunner.write {
         // Här kan jag faktiskt göra interna bönanrop med bibehållen transaktionshantering eftersom Springs proxy inte används för transaktioner - woohoo! :)
         require(delete(feelingId)) { "Feeling med id $feelingId finns inte och kan således inte bytas ut" }
 

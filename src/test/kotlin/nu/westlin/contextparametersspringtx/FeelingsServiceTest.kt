@@ -20,7 +20,7 @@ class FeelingsServiceTest {
     @Test
     fun `getById - ingen hittas ska ge null`() = txRunner {
 
-        val id = 42
+        val id = FeelingId.random()
         every { repository.getFeelingById(id) } returns null
 
         assertThat(service.getById(id)).isNull()
@@ -29,7 +29,7 @@ class FeelingsServiceTest {
     @Test
     fun create() = txRunner {
         val feeling = Feeling.new(Feeling.Status.Boozed)
-        val createdFeeling = feeling.copy(id = 42)
+        val createdFeeling = feeling.copy(id = FeelingId.random())
 
         every { repository.create(feeling) } returns createdFeeling
 
@@ -38,7 +38,7 @@ class FeelingsServiceTest {
 
     @Test
     fun `delete - finns inte`() = txRunner {
-        val id = 5
+        val id = FeelingId.random()
         every { repository.delete(id) } returns false
 
         assertThat(service.delete(id)).isFalse
@@ -49,7 +49,7 @@ class FeelingsServiceTest {
 
     @Test
     fun `delete - finns`() = txRunner {
-        val id = 5
+        val id = FeelingId.random()
         every { repository.delete(id) } returns true
 
         assertThat(service.delete(id)).isTrue
@@ -60,7 +60,7 @@ class FeelingsServiceTest {
 
     @Test
     fun `replace - finns inte`() = txRunner {
-        val id = 5
+        val id = FeelingId.random()
         every { repository.delete(id) } returns false
 
         assertThatThrownBy { service.replace(id, Feeling.new(Feeling.Status.entries.random())) }
@@ -73,7 +73,7 @@ class FeelingsServiceTest {
 
     @Test
     fun `replace - finns`() = txRunner {
-        val id = 5
+        val id = FeelingId.random()
         every { repository.delete(id) } returns true
 
         val feeling = Feeling.new(Feeling.Status.Boozed)
@@ -81,7 +81,7 @@ class FeelingsServiceTest {
         every { repository.create(feeling) } returns createdFeeling
 
         assertThat(
-            service.replace(id, Feeling.new(Feeling.Status.entries.random()))
+            service.replace(id, feeling)
         ).isEqualTo(createdFeeling)
 
         verify { repository.delete(id) }

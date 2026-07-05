@@ -19,7 +19,7 @@ class FeelingsController(
 ) {
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getById(@PathVariable id: Int): ResponseEntity<Feeling> {
+    fun getById(@PathVariable id: FeelingId): ResponseEntity<Feeling> {
         val feeling = service.getById(id)
         return if (feeling != null) {
             ResponseEntity.ok(feeling)
@@ -42,7 +42,7 @@ class FeelingsController(
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Int): ResponseEntity<Void> {
+    fun delete(@PathVariable id: FeelingId): ResponseEntity<Void> {
         val existed = service.delete(id)
 
         return if (existed) {

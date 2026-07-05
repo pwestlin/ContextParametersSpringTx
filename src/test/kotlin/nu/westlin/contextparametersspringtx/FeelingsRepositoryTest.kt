@@ -19,12 +19,12 @@ class FeelingsRepositoryTest @Autowired constructor(
 
     @Test
     fun `get - ingen finns`() = exposedWriteTestBlock {
-        assertThat(repository.getFeelingById(42)).isNull()
+        assertThat(repository.getFeelingById(FeelingId.random())).isNull()
     }
 
     @Test
     fun `get - en finns`() = exposedWriteTestBlock {
-        val feeling = Feeling.new(status = Feeling.Status.Crazy)
+        val feeling = Feeling.example()
         val createdFeeling = repository.create(feeling)
         assertThat(createdFeeling).isEqualTo(feeling.copy(id = createdFeeling.id))
 
@@ -33,7 +33,7 @@ class FeelingsRepositoryTest @Autowired constructor(
 
     @Test
     fun `delete - ingen finns ska returnera false`() {
-        assertThat(repository.delete(42)).isFalse
+        assertThat(repository.delete(FeelingId.random())).isFalse
     }
 
     @Test

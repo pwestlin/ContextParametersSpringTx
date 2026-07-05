@@ -23,7 +23,7 @@ class FeelingsRepository {
     }
 
     context(_: TransactionRunner.ReadTx)
-    fun getFeelingById(feelingId: Int): Feeling? {
+    fun getFeelingById(feelingId: FeelingId): Feeling? {
         return FeelingsTable
             .selectAll()
             .where { FeelingsTable.id eq feelingId }
@@ -31,7 +31,7 @@ class FeelingsRepository {
             ?.toFeeling()   // Använder extension-funktionen på ResultRow om den inte är null
     }
 
-    fun delete(feelingId: Int): Boolean {
+    fun delete(feelingId: FeelingId): Boolean {
         return FeelingsTable
             .deleteWhere { FeelingsTable.id eq feelingId } == 1
     }
