@@ -19,3 +19,10 @@ class FakeExposedTransactionRunner(
             return with(this) { block() }
         }
 }
+
+@Suppress("RedundantWith")
+operator fun <T> FakeExposedTransactionRunner.invoke(
+    block: context(FakeExposedTransactionRunner) () -> T
+) {
+    return with(this) { block() }
+}

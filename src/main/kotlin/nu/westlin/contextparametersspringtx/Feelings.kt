@@ -4,6 +4,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 data class Feeling(
+    // TODO pwestlin: -> FeelingId
     val id: Int = 0,
     val status: Status,
     val createdAt: Instant = Instant.now(),

@@ -1,6 +1,8 @@
 package nu.westlin.contextparametersspringtx
 
 import org.assertj.core.api.Assertions.assertThat
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +29,25 @@ class FeelingsRepositoryTest @Autowired constructor(
         assertThat(createdFeeling).isEqualTo(feeling.copy(id = createdFeeling.id))
 
         assertThat(repository.getFeelingById(createdFeeling.id)).isEqualTo(feeling.copy(id = createdFeeling.id))
+    }
+
+    @Test
+    fun `delete - ingen finns ska returnera false`() {
+        assertThat(repository.delete(42)).isFalse
+    }
+
+    @Test
+    fun `delete - en finns ska returnera true`() = exposedWriteTestBlock {
+        val feeling = Feeling.new(status = Feeling.Status.Crazy)
+        val createdFeeling = repository.create(feeling)
+
+        assertThat(repository.delete(createdFeeling.id)).isTrue
+        val exist: Boolean = !FeelingsTable
+            .selectAll()
+            .limit(1)
+            .where { FeelingsTable.id eq createdFeeling.id }
+            .empty()
+        assertThat(exist).isFalse
     }
 }
 

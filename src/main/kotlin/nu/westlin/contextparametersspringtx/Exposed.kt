@@ -4,7 +4,7 @@ import org.jetbrains.exposed.v1.core.ResultRow
 import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
 import org.jetbrains.exposed.v1.javatime.timestamp
 
-object Feelings : IntIdTable("feeling") {
+object FeelingsTable : IntIdTable("feeling") {
     // Lagrar enumen som en sträng i databasen (t.ex. "Happy", "Sad")
     val status = enumerationByName<Feeling.Status>("status", length = 20)
 
@@ -19,8 +19,8 @@ object Feelings : IntIdTable("feeling") {
  * Extension-funktion för att enkelt mappa en databasrad till din domänmodell.
  */
 fun ResultRow.toFeeling() = Feeling(
-    id = this[Feelings.id].value, // .value behövs då IntIdTable använder EntityID<Int>
-    status = this[Feelings.status],
-    createdAt = this[Feelings.createdAt],
-    comment = this[Feelings.comment]
+    id = this[FeelingsTable.id].value, // .value behövs då IntIdTable använder EntityID<Int>
+    status = this[FeelingsTable.status],
+    createdAt = this[FeelingsTable.createdAt],
+    comment = this[FeelingsTable.comment]
 )

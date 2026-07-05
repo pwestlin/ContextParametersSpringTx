@@ -2,6 +2,7 @@ package nu.westlin.contextparametersspringtx
 
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -38,5 +39,16 @@ class FeelingsController(
             .toUri()
 
         return ResponseEntity.created(location).build()
+    }
+
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Int): ResponseEntity<Void> {
+        val existed = service.delete(id)
+
+        return if (existed) {
+            ResponseEntity.noContent().build() // 204 No Content är standard vid DELETE
+        } else {
+            ResponseEntity.notFound().build()  // 404 Not Found
+        }
     }
 }

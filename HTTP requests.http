@@ -11,5 +11,11 @@ GET http://localhost:8080/feelings/1
 Accept: application/json
 
 ### Hämta feeling by id som inte finns
-GET http://localhost:8080/feelings/42
+GET http://localhost:8080/feelings/666
 Accept: application/json
+
+### Ta bort feeling som finns
+DELETE http://localhost:8080/feelings/1
+
+### Ta bort feeling som inte finns
+DELETE http://localhost:8080/feelings/666
