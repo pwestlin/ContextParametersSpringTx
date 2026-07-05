@@ -8,13 +8,11 @@ class FeelingsService(
     private val txRunner: TransactionRunner
 ) {
 
-    fun getById(id: Int): Feeling? {
-        return txRunner.write {
-            repository.getFeelingById(id)
-        }
+    @TxRead
+    fun getById(id: Int): Feeling? = txRunner.readOnly {
+        repository.getFeelingById(id)
     }
 
-    fun create(feeling: Feeling): Feeling {
-        return txRunner.write { repository.create(feeling) }
-    }
+    @TxWrite
+    fun create(feeling: Feeling): Feeling = txRunner.write { repository.create(feeling) }
 }
