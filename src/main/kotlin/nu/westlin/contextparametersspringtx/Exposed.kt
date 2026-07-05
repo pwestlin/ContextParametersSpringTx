@@ -10,8 +10,8 @@ import org.jetbrains.exposed.v1.javatime.timestamp
 object FeelingsTable : IdTable<FeelingId>("feeling") {
 
     override val id: Column<EntityID<FeelingId>> = registerColumn("id", FeelingIdColumnType())
-            .autoIncrement()
-            .entityId()
+        .autoIncrement()
+        .entityId()
 
     // Lagrar enumen som en sträng i databasen (t.ex. "Happy", "Sad")
     val status = enumerationByName<Feeling.Status>("status", length = 20)

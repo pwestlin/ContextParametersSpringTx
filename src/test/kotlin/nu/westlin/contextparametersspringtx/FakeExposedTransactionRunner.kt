@@ -8,16 +8,16 @@ class FakeExposedTransactionRunner(
 ) : TransactionRunner, TransactionRunner.WriteTx {
 
     @Suppress("REDUNDANT_WITH")
-        override fun <T> readOnly(block: context(TransactionRunner.ReadTx) () -> T): T {
-            // Vi skickar in 'this' (faken själv) som kontext
-            return with(this) { block() }
-        }
+    override fun <T> readOnly(block: context(TransactionRunner.ReadTx) () -> T): T {
+        // Vi skickar in 'this' (faken själv) som kontext
+        return with(this) { block() }
+    }
 
-        @Suppress("REDUNDANT_WITH")
-        override fun <T> write(block: context(TransactionRunner.WriteTx) () -> T): T {
-            // Vi skickar in 'this' (faken själv) som kontext
-            return with(this) { block() }
-        }
+    @Suppress("REDUNDANT_WITH")
+    override fun <T> write(block: context(TransactionRunner.WriteTx) () -> T): T {
+        // Vi skickar in 'this' (faken själv) som kontext
+        return with(this) { block() }
+    }
 }
 
 @Suppress("RedundantWith")

@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ### Hämta feeling by id som finns
-GET http://localhost:8080/feelings/1
+GET http://localhost:8080/feelings/5
 Accept: application/json
 
 ### Hämta feeling by id som inte finns

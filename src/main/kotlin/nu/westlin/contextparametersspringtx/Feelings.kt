@@ -28,16 +28,14 @@ fun Feeling.Companion.new(status: Feeling.Status, comment: String? = null): Feel
     comment = comment
 )
 
-// TODO pwestlin: Privat konstruktor och invoke med kontroll på att value > 0. Det är bara Zero som får anropa privata konstruktorn med 0.
 @JvmInline
-value class FeelingId(val value: Int): Comparable<FeelingId> {
+value class FeelingId private constructor(val value: Int) : Comparable<FeelingId> {
 
     override fun compareTo(other: FeelingId): Int = value.compareTo(other.value)
-    
+
     override fun toString(): String {
         return value.toString()
     }
-
 
     operator fun plus(other: FeelingId): FeelingId = FeelingId(this.value + other.value)
 
@@ -45,6 +43,11 @@ value class FeelingId(val value: Int): Comparable<FeelingId> {
 
     companion object {
         val Zero = FeelingId(0)
+
+        operator fun invoke(id: Int): FeelingId {
+            require(id > 0) { "id måste vara > 0 men var $id" }
+            return FeelingId(id)
+        }
     }
 }
 
