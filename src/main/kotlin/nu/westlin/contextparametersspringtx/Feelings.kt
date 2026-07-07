@@ -5,7 +5,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 data class Feeling(
-    val id: FeelingId = FeelingId.Zero,
+    val id: FeelingId,
     val status: Status,
     val createdAt: Instant = Instant.now(),
     val comment: String? = null
@@ -22,7 +22,7 @@ data class Feeling(
 }
 
 fun Feeling.Companion.new(status: Feeling.Status, comment: String? = null): Feeling = Feeling(
-    id = FeelingId.Zero,
+    id = FeelingId(1),
     status = status,
     // Postgres klarar "bara" mikrosekunder
     createdAt = Instant.now().truncatedTo(ChronoUnit.MICROS),
@@ -43,8 +43,6 @@ value class FeelingId private constructor(val value: Int) : Comparable<FeelingId
     operator fun plus(value: Int): FeelingId = FeelingId(this.value + value)
 
     companion object {
-        // TODO pwestlin: Ta bort
-        val Zero = FeelingId(0)
 
         @JsonCreator
         @JvmStatic

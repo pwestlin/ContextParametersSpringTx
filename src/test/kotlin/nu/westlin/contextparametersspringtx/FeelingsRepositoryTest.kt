@@ -76,19 +76,11 @@ private fun Feeling?.assertMatches(dto: CreateFeelingDTO) {
 
     this.assertIsNotNull()
 
-    // 1. Jämför gemensamma fält med DTO:n dynamiskt
     assertThat(this)
         .usingRecursiveComparison()
         .ignoringFields("id", "createdAt")
         .isEqualTo(dto)
 
-    // 2. Kontrollera databasgenererat ID (antar att FeelingId kan jämföras mot Zero)
-    assertThat(this.id).isNotEqualTo(FeelingId.Zero)
-
-    // Om FeelingId har en underliggande primitiv (t.ex. value class) kan du även göra:
-    // assertThat(this.id.value).isGreaterThan(0)
-
-    // 3. Kontrollera tidsstämpel (skall vara sparad efter eller exakt vid teststart)
     assertThat(this.createdAt).isBeforeOrEqualTo(Instant.now())
 }
 
