@@ -14,13 +14,13 @@ class FeelingsService(
     }
 
     @TxWrite
-    fun create(feeling: Feeling): Feeling = txRunner.write { repository.create(feeling) }
+    fun create(feeling: CreateFeelingDTO): Feeling = txRunner.write { repository.create(feeling) }
 
     @TxWrite
     fun delete(feelingId: FeelingId): Boolean = txRunner.write { repository.delete(feelingId) }
 
     @TxWrite
-    fun replace(feelingId: FeelingId, replacer: Feeling): Feeling = txRunner.write {
+    fun replace(feelingId: FeelingId, replacer: CreateFeelingDTO): Feeling = txRunner.write {
         // Här kan jag faktiskt göra interna bönanrop med bibehållen transaktionshantering eftersom Springs proxy inte används för transaktioner - woohoo! :)
         require(delete(feelingId)) { "Feeling med id $feelingId finns inte och kan således inte bytas ut" }
 

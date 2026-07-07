@@ -29,11 +29,11 @@ class FeelingsServiceTest {
     @Test
     fun create() = txRunner {
         val feeling = Feeling.new(Feeling.Status.Boozed)
-        val createdFeeling = feeling.copy(id = FeelingId.random())
+        val dto = feeling.toDTO()
 
-        every { repository.create(feeling) } returns createdFeeling
+        every { repository.create(dto) } returns feeling
 
-        assertThat(service.create(feeling)).isEqualTo(createdFeeling)
+        assertThat(service.create(dto)).isEqualTo(feeling)
     }
 
     @Test
@@ -63,7 +63,7 @@ class FeelingsServiceTest {
         val id = FeelingId.random()
         every { repository.delete(id) } returns false
 
-        assertThatThrownBy { service.replace(id, Feeling.new(Feeling.Status.entries.random())) }
+        assertThatThrownBy { service.replace(id, CreateFeelingDTO.example()) }
             .isExactlyInstanceOf<IllegalArgumentException>()
             .hasMessage("Feeling med id $id finns inte och kan således inte bytas ut")
 
@@ -76,16 +76,16 @@ class FeelingsServiceTest {
         val id = FeelingId.random()
         every { repository.delete(id) } returns true
 
-        val feeling = Feeling.new(Feeling.Status.Boozed)
-        val createdFeeling = feeling.copy(id = feeling.id + 1)
-        every { repository.create(feeling) } returns createdFeeling
+        val createdFeeling = Feeling.example()
+        val dto = createdFeeling.toDTO()
+        every { repository.create(dto) } returns createdFeeling
 
         assertThat(
-            service.replace(id, feeling)
+            service.replace(id, dto)
         ).isEqualTo(createdFeeling)
 
         verify { repository.delete(id) }
-        verify { repository.create(feeling) }
+        verify { repository.create(dto) }
         confirmVerified(repository)
     }
 }

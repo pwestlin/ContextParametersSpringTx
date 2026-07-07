@@ -29,7 +29,7 @@ class FeelingsController(
     }
 
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun create(@RequestBody feeling: Feeling): ResponseEntity<Void> {
+    fun create(@RequestBody feeling: CreateFeelingDTO): ResponseEntity<Void> {
         val createdFeeling = service.create(feeling)
 
         val location: URI = ServletUriComponentsBuilder

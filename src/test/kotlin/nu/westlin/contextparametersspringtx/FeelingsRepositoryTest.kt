@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase
 import org.springframework.boot.jdbc.test.autoconfigure.JdbcTest
 import org.springframework.context.annotation.Import
+import java.time.Instant
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -24,11 +27,11 @@ class FeelingsRepositoryTest @Autowired constructor(
 
     @Test
     fun `get - en finns`() = exposedWriteTestBlock {
-        val feeling = Feeling.example()
-        val createdFeeling = repository.create(feeling)
-        assertThat(createdFeeling).isEqualTo(feeling.copy(id = createdFeeling.id))
+        val dto = CreateFeelingDTO.example()
+        val createdFeeling = repository.create(dto)
+        assertThat(createdFeeling.toDTO()).isEqualTo(dto)
 
-        assertThat(repository.getFeelingById(createdFeeling.id)).isEqualTo(feeling.copy(id = createdFeeling.id))
+        repository.getFeelingById(createdFeeling.id).assertMatches(dto)
     }
 
     @Test
@@ -38,7 +41,7 @@ class FeelingsRepositoryTest @Autowired constructor(
 
     @Test
     fun `delete - en finns ska returnera true`() = exposedWriteTestBlock {
-        val feeling = Feeling.new(status = Feeling.Status.Crazy)
+        val feeling = CreateFeelingDTO.example()
         val createdFeeling = repository.create(feeling)
 
         assertThat(repository.delete(createdFeeling.id)).isTrue
@@ -67,4 +70,33 @@ fun <T> exposedWriteTestBlock(block: context(TransactionRunner.WriteTx) () -> T)
         override val exposedTx = TransactionManager.current()
     }
     return with(ctx) { block() }
+}
+
+private fun Feeling?.assertMatches(dto: CreateFeelingDTO) {
+
+    this.assertIsNotNull()
+
+    // 1. Jämför gemensamma fält med DTO:n dynamiskt
+    assertThat(this)
+        .usingRecursiveComparison()
+        .ignoringFields("id", "createdAt")
+        .isEqualTo(dto)
+
+    // 2. Kontrollera databasgenererat ID (antar att FeelingId kan jämföras mot Zero)
+    assertThat(this.id).isNotEqualTo(FeelingId.Zero)
+
+    // Om FeelingId har en underliggande primitiv (t.ex. value class) kan du även göra:
+    // assertThat(this.id.value).isGreaterThan(0)
+
+    // 3. Kontrollera tidsstämpel (skall vara sparad efter eller exakt vid teststart)
+    assertThat(this.createdAt).isBeforeOrEqualTo(Instant.now())
+}
+
+@OptIn(ExperimentalContracts::class)
+private fun <T : Any> T?.assertIsNotNull(): T {
+    contract {
+        returns() implies (this@assertIsNotNull != null)
+    }
+    assertThat(this).isNotNull()
+    return this!!
 }

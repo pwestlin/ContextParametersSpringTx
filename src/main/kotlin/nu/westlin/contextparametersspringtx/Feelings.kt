@@ -43,6 +43,7 @@ value class FeelingId private constructor(val value: Int) : Comparable<FeelingId
     operator fun plus(value: Int): FeelingId = FeelingId(this.value + value)
 
     companion object {
+        // TODO pwestlin: Ta bort
         val Zero = FeelingId(0)
 
         @JsonCreator
@@ -54,3 +55,9 @@ value class FeelingId private constructor(val value: Int) : Comparable<FeelingId
     }
 }
 
+data class CreateFeelingDTO(
+    val status: Feeling.Status,
+    val comment: String? = null
+) {
+    companion object
+}

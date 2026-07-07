@@ -18,3 +18,16 @@ fun Feeling.Companion.example(
     createdAt = createdAt,
     comment = comment
 )
+
+fun CreateFeelingDTO.Companion.example(
+    status: Status = Status.entries.random(),
+    comment: String? = null
+): CreateFeelingDTO = CreateFeelingDTO(
+    status = status,
+    comment = comment
+)
+
+fun Feeling.toDTO(): CreateFeelingDTO = CreateFeelingDTO(
+    status = status,
+    comment = comment
+)
