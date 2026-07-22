@@ -16,9 +16,7 @@ import kotlin.contracts.contract
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(FeelingsRepository::class, SharedTestcontainersConfiguration::class)
-class FeelingsRepositoryTest @Autowired constructor(
-    private val repository: FeelingsRepository
-) {
+class FeelingsRepositoryTest @Autowired constructor(private val repository: FeelingsRepository) {
 
     @Test
     fun `get - ingen finns`() = exposedWriteTestBlock {
@@ -73,7 +71,6 @@ fun <T> exposedWriteTestBlock(block: context(TransactionRunner.WriteTx) () -> T)
 }
 
 private fun Feeling?.assertMatches(dto: CreateFeelingDTO) {
-
     this.assertIsNotNull()
 
     assertThat(this)

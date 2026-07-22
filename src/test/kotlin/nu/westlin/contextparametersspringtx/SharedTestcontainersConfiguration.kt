@@ -12,21 +12,18 @@ import org.testcontainers.utility.DockerImageName
 @TestConfiguration(proxyBeanMethods = false)
 @ImportAutoConfiguration(
     // Tvinga Spring att köra Exposeds auto-konfiguration. Den körs inte automatiskt av @JdbcTest.
-    classes = [ExposedAutoConfiguration::class]
+    classes = [ExposedAutoConfiguration::class],
 )
 object SharedTestcontainersConfiguration {
 
     // Genom att initiera den i ett object startar containern en gång
     // när klassen laddas första gången.
     private val postgresContainer = PostgreSQLContainer(DockerImageName.parse("postgres:16-alpine")).apply {
-        val reuse = System.getenv("testcontainers.reuse.enable").toBoolean()
-        withReuse(reuse)
+        withReuse(true)
         start()
     }
 
     @Bean
     @ServiceConnection
-    fun postgresContainerBean(): PostgreSQLContainer {
-        return postgresContainer
-    }
+    fun postgresContainerBean(): PostgreSQLContainer = postgresContainer
 }

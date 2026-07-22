@@ -1,0 +1,23 @@
+exceptions:
+  active: true
+  TooGenericExceptionThrown:
+    active: true
+    # Ta bort det undantag du vill tillåta från listan nedan:
+    exceptionNames:
+      - Error
+      - Exception
+      - Throwable
+
+style:
+  NewLineAtEndOfFile:
+    active: false
+  MaxLineLength:
+    active: false
+
+
+ktlint:
+  FinalNewline:
+    active: false
+  MaximumLineLength:
+    active: false
+

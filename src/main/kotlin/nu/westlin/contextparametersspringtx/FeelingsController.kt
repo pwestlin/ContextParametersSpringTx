@@ -14,9 +14,7 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/feelings")
-class FeelingsController(
-    private val service: FeelingsService
-) {
+class FeelingsController(private val service: FeelingsService) {
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getById(@PathVariable id: FeelingId): ResponseEntity<Feeling> {
@@ -29,7 +27,7 @@ class FeelingsController(
     }
 
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun create(@RequestBody feeling: CreateFeelingDTO): ResponseEntity<Void> {
+    fun create(@RequestBody feeling: CreateFeelingDTO): ResponseEntity<Unit> {
         val createdFeeling = service.create(feeling)
 
         val location: URI = ServletUriComponentsBuilder
@@ -42,13 +40,13 @@ class FeelingsController(
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: FeelingId): ResponseEntity<Void> {
+    fun delete(@PathVariable id: FeelingId): ResponseEntity<Unit> {
         val existed = service.delete(id)
 
         return if (existed) {
             ResponseEntity.noContent().build() // 204 No Content är standard vid DELETE
         } else {
-            ResponseEntity.notFound().build()  // 404 Not Found
+            ResponseEntity.notFound().build() // 404 Not Found
         }
     }
 }

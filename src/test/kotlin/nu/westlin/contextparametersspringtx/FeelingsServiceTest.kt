@@ -19,7 +19,6 @@ class FeelingsServiceTest {
 
     @Test
     fun `getById - ingen hittas ska ge null`() = txRunner {
-
         val id = FeelingId.random()
         every { repository.getFeelingById(id) } returns null
 
@@ -27,7 +26,7 @@ class FeelingsServiceTest {
     }
 
     @Test
-    fun create() = txRunner {
+    fun create() = txRunner<Unit> {
         val feeling = Feeling.new(Feeling.Status.Boozed)
         val dto = feeling.toDTO()
 
@@ -81,7 +80,7 @@ class FeelingsServiceTest {
         every { repository.create(dto) } returns createdFeeling
 
         assertThat(
-            service.replace(id, dto)
+            service.replace(id, dto),
         ).isEqualTo(createdFeeling)
 
         verify { repository.delete(id) }

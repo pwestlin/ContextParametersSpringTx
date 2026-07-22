@@ -11,23 +11,23 @@ fun Feeling.Companion.example(
     id: FeelingId = FeelingId.random(),
     status: Status = Status.entries.random(),
     createdAt: Instant = Instant.now().truncatedTo(ChronoUnit.MICROS),
-    comment: String? = null
+    comment: String? = null,
 ): Feeling = Feeling(
     id = id,
     status = status,
     createdAt = createdAt,
-    comment = comment
+    comment = comment,
 )
 
 fun CreateFeelingDTO.Companion.example(
     status: Status = Status.entries.random(),
-    comment: String? = null
+    comment: String? = null,
 ): CreateFeelingDTO = CreateFeelingDTO(
     status = status,
-    comment = comment
+    comment = comment,
 )
 
 fun Feeling.toDTO(): CreateFeelingDTO = CreateFeelingDTO(
     status = status,
-    comment = comment
+    comment = comment,
 )

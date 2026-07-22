@@ -10,7 +10,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition
 class ExposedTransactionRunner(private val transactionManager: PlatformTransactionManager) : TransactionRunner {
 
     // 1. Skapar en ren lästransaktion - tillåter null som returvärde (T kan vara nullable)
-    @Suppress("RedundantWith")
+    @Suppress("RedundantWith", "TooGenericExceptionCaught")
     override fun <T> readOnly(block: context(TransactionRunner.ReadTx) () -> T): T {
         val definition = DefaultTransactionDefinition().apply {
             isReadOnly = true
@@ -34,7 +34,7 @@ class ExposedTransactionRunner(private val transactionManager: PlatformTransacti
     }
 
     // 2. Skapar en skrivtransaktion - tillåter också null som returvärde
-    @Suppress("RedundantWith")
+    @Suppress("RedundantWith", "TooGenericExceptionCaught")
     override fun <T> write(block: context(WriteTx) () -> T): T {
         val definition = DefaultTransactionDefinition().apply {
             isReadOnly = false

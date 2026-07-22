@@ -3,9 +3,9 @@ package nu.westlin.contextparametersspringtx
 import org.jetbrains.exposed.v1.core.Transaction
 
 @Suppress("RedundantWith")
-class FakeExposedTransactionRunner(
-    override val exposedTx: Transaction
-) : TransactionRunner, TransactionRunner.WriteTx {
+class FakeExposedTransactionRunner(override val exposedTx: Transaction) :
+    TransactionRunner,
+    TransactionRunner.WriteTx {
 
     @Suppress("REDUNDANT_WITH")
     override fun <T> readOnly(block: context(TransactionRunner.ReadTx) () -> T): T {
@@ -21,8 +21,5 @@ class FakeExposedTransactionRunner(
 }
 
 @Suppress("RedundantWith")
-operator fun <T> FakeExposedTransactionRunner.invoke(
-    block: context(FakeExposedTransactionRunner) () -> T
-) {
-    return with(this) { block() }
-}
+operator fun <T> FakeExposedTransactionRunner.invoke(block: context(FakeExposedTransactionRunner) () -> T) =
+    with(this) { block() }

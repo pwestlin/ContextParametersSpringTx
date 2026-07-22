@@ -26,7 +26,7 @@ class FeelingsRepository {
             id = generatedId.value,
             status = feeling.status,
             createdAt = createdAt,
-            comment = feeling.comment
+            comment = feeling.comment,
         )
     }
 
@@ -36,11 +36,9 @@ class FeelingsRepository {
             .selectAll()
             .where { FeelingsTable.id eq feelingId }
             .singleOrNull() // Returnerar ResultRow? (eller null om id inte finns)
-            ?.toFeeling()   // Använder extension-funktionen på ResultRow om den inte är null
+            ?.toFeeling() // Använder extension-funktionen på ResultRow om den inte är null
     }
 
-    fun delete(feelingId: FeelingId): Boolean {
-        return FeelingsTable
-            .deleteWhere { FeelingsTable.id eq feelingId } == 1
-    }
+    fun delete(feelingId: FeelingId): Boolean = FeelingsTable
+        .deleteWhere { FeelingsTable.id eq feelingId } == 1
 }

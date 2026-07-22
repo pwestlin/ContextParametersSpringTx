@@ -30,7 +30,7 @@ fun ResultRow.toFeeling() = Feeling(
     id = this[FeelingsTable.id].value, // .value behövs då IntIdTable använder EntityID<Int>
     status = this[FeelingsTable.status],
     createdAt = this[FeelingsTable.createdAt],
-    comment = this[FeelingsTable.comment]
+    comment = this[FeelingsTable.comment],
 )
 
 class FeelingIdColumnType : ColumnType<FeelingId>() {
@@ -44,7 +44,5 @@ class FeelingIdColumnType : ColumnType<FeelingId>() {
     }
 
     // Nu med rätt signatur matchande ColumnType<FeelingId>
-    override fun notNullValueToDB(value: FeelingId): Any {
-        return value.value
-    }
+    override fun notNullValueToDB(value: FeelingId): Any = value.value
 }

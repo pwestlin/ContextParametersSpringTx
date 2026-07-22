@@ -12,4 +12,3 @@ interface TransactionRunner {
 
     interface WriteTx : ReadTx
 }
-

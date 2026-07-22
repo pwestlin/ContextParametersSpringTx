@@ -8,14 +8,14 @@ data class Feeling(
     val id: FeelingId,
     val status: Status,
     val createdAt: Instant = Instant.now(),
-    val comment: String? = null
+    val comment: String? = null,
 ) {
     enum class Status {
         Happy,
         Sad,
         Tired,
         Crazy,
-        Boozed;
+        Boozed,
     }
 
     companion object
@@ -26,7 +26,7 @@ fun Feeling.Companion.new(status: Feeling.Status, comment: String? = null): Feel
     status = status,
     // Postgres klarar "bara" mikrosekunder
     createdAt = Instant.now().truncatedTo(ChronoUnit.MICROS),
-    comment = comment
+    comment = comment,
 )
 
 @JvmInline
@@ -34,9 +34,7 @@ value class FeelingId private constructor(val value: Int) : Comparable<FeelingId
 
     override fun compareTo(other: FeelingId): Int = value.compareTo(other.value)
 
-    override fun toString(): String {
-        return value.toString()
-    }
+    override fun toString(): String = value.toString()
 
     operator fun plus(other: FeelingId): FeelingId = FeelingId(this.value + other.value)
 
@@ -53,9 +51,6 @@ value class FeelingId private constructor(val value: Int) : Comparable<FeelingId
     }
 }
 
-data class CreateFeelingDTO(
-    val status: Feeling.Status,
-    val comment: String? = null
-) {
+data class CreateFeelingDTO(val status: Feeling.Status, val comment: String? = null) {
     companion object
 }
